@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+*.log
+
+# Jupyter Notebooks Checkpoints
+.ipynb_checkpoints/
+
+# Data
+data/raw/
+data/processed/
+data/external/
+*.csv
+*.tsv
+*.parquet
+*.json
+*.xlsx
+*.zip
+
+# Environments
+.env
+.venv/
+env/
+venv/
+Pipfile.lock
+poetry.lock
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# VS Code
+.vscode/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Notebooks Metadata
+*.nbconvert.ipynb
+*.nbformat
+
+# Frontend Build (React/Streamlit)
+
+
+# Coverage and Reports
+htmlcov/
+.coverage
+coverage.xml
+*.lcov
+
+# Pytest
+.pytest_cache/
+
+# Others
+*.bak
+*.swp
+*.tmp
+
