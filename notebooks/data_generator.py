@@ -337,6 +337,13 @@ class Data():
         self.order_columns(new_column_order)
 
     def save_data(self,path):
+        self.df.columns = (
+            self.df.columns
+            .str.strip()
+            .str.lower()
+            .str.replace(' ', '_')
+            .str.replace('-', '_')
+        )
         self.df.to_csv(path, index = False)
 
     def show(self):
