@@ -21,11 +21,11 @@ class Data():
                 self.df.rename(columns={
                     'type': 'Type',
                     'amount': 'Amount',
-                    'nameOrig': 'ID Source',
-                    'oldbalanceOrg': 'Old Balance',
-                    'newbalanceOrig': 'New Balance',
-                    'nameDest': 'ID Dest',
-                    'isFraud': 'Is Fraud'
+                    'nameOrig': 'ID_Source',
+                    'oldbalanceOrg': 'Old_Balance',
+                    'newbalanceOrig': 'New_Balance',
+                    'nameDest': 'ID_Dest',
+                    'isFraud': 'Is_Fraud'
                 }, inplace=True)
             except:
                 print("Path not found!")
@@ -65,7 +65,7 @@ class Data():
 
         # Convert to string format
         timestamp_strings = [ts.strftime('%Y-%m-%d %H:%M:%S') for ts in timestamps]
-        self.df['Date Time'] = timestamp_strings
+        self.df['Date_Time'] = timestamp_strings
 
     def add_states_cities(self,pakistan_city_state):
 
@@ -79,8 +79,8 @@ class Data():
             cities.append(city)
 
         # Add to your existing DataFrame
-        self.df['Source State'] = states
-        self.df['Source City'] = cities    
+        self.df['Source_State'] = states
+        self.df['Source_City'] = cities    
 
 
         cities = []
@@ -93,8 +93,8 @@ class Data():
             cities.append(city)
 
         # Add to your existing DataFrame
-        self.df['Dest State'] = states
-        self.df['Dest City'] = cities
+        self.df['Dest_State'] = states
+        self.df['Dest_City'] = cities
 
     def add_transaction_ids(self):
 
@@ -112,7 +112,7 @@ class Data():
         transaction_ids = [generate_transaction_id(used_ids) for _ in range(self.num_rows)]
 
         # Add the 'transaction_id' column to the existing DataFrame
-        self.df['Transaction Id'] = transaction_ids
+        self.df['Transaction_Id'] = transaction_ids
 
     def add_devices(self,device_models):
         def generate_device_name():
@@ -135,7 +135,7 @@ class Data():
                 device_names.append(generate_device_model())  # Option 2: iPhone 13, Samsung Galaxy, etc.
 
         # Add the 'device_name' column to the DataFrame
-        self.df['Device Name'] = device_names
+        self.df['Device_Name'] = device_names
 
     def add_imeis(self):
         def generate_imei():
@@ -190,7 +190,7 @@ class Data():
         phone_numbers = [generate_phone_number() for _ in range(self.num_rows)]
 
         # Add the 'phone_number' column to the DataFrame
-        self.df['Phone Number'] = phone_numbers
+        self.df['Phone_Number'] = phone_numbers
 
     def add_names_cnics(self,names):
         def generate_cnic():
@@ -222,13 +222,13 @@ class Data():
         kyc_status_list = [generate_kyc_status() for _ in range(self.num_rows)]
 
         # Add the 'KYC status' column to the DataFrame
-        self.df['KYC Status'] = kyc_status_list
+        self.df['KYC_Status'] = kyc_status_list
 
     def add_service_charges(self):
         def calculate_service_charge(amount):
             return amount * 0.002  # 2% service charge
 
-        self.df['Service Charges'] = self.df['Amount'].apply(calculate_service_charge)
+        self.df['Service_Charges'] = self.df['Amount'].apply(calculate_service_charge)
     
     def add_narations(self,narrations):
         
@@ -308,10 +308,10 @@ class Data():
             "Online gaming purchase"
         ]
 
-        new_column_order = ['Transaction Id', 'Date Time', 'Phone Number', 'CNIC', 'Name','Type', 'Amount', 'ID Source', 'Old Balance', 'New Balance',
-         'Source State', 'Source City', 
-       'Device Name', 'IMEI',  'KYC Status',
-       'Service Charges', 'Channel', 'Remarks' , 'ID Dest', 'Dest State', 'Dest City', 'Is Fraud']
+        new_column_order = ['Transaction_Id', 'Date_Time', 'Phone_Number', 'CNIC', 'Name','Type', 'Amount', 'ID_Source', 'Old_Balance', 'New_Balance',
+         'Source_State', 'Source_City', 
+       'Device_Name', 'IMEI',  'KYC_Status',
+       'Service_Charges', 'Channel', 'Remarks' , 'ID_Dest', 'Dest_State', 'Dest_City', 'Is_Fraud']
 
         channels = [
             "Bank Transfer", 
@@ -337,13 +337,13 @@ class Data():
         self.order_columns(new_column_order)
 
     def save_data(self,path):
-        self.df.columns = (
-            self.df.columns
-            .str.strip()
-            .str.lower()
-            .str.replace(' ', '_')
-            .str.replace('-', '_')
-        )
+        # self.df.columns = (
+        #     self.df.columns
+        #     .str.strip()
+        #     .str.lower()
+        #     .str.replace(' ', '_')
+        #     .str.replace('-', '_')
+        # )
         self.df.to_csv(path, index = False)
 
     def show(self):
@@ -425,10 +425,10 @@ class Data():
 
             # Shuffle and save
             random.shuffle(data)
-            self.df = pd.DataFrame(data, columns=["Type", "Amount", "ID Source", "ID Dest", "Old Balance", "New Balance"])
+            self.df = pd.DataFrame(data, columns=["Type", "Amount", "ID_Source", "ID_Dest", "Old_Balance", "New_Balance"])
 
             self.num_rows = num_records 
-            self.df['Is Fraud'] = 1
+            self.df['Is_Fraud'] = 1
 
             self.generate_columns()
         else:

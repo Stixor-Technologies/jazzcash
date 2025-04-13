@@ -1,26 +1,32 @@
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler , LabelEncoder
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import OrdinalEncoder
+
+
 
 
 def preprocess(df):
-    df['Date Time'] = pd.to_datetime(df['Date Time'], format='%Y-%m-%d %H:%M:%S', errors='coerce')
-    df['year'] = df['Date Time'].dt.year
-    df['month'] = df['Date Time'].dt.month
-    df['day'] = df['Date Time'].dt.day
-    df['hour'] = df['Date Time'].dt.hour
-    df['minute'] = df['Date Time'].dt.minute
-    df['second'] = df['Date Time'].dt.second
-    df['weekday'] = df['Date Time'].dt.weekday
-    df['day_of_year'] = df['Date Time'].dt.dayofyear
 
-    df = df.drop(['Transaction Id', 'Date Time', 'Phone Number', 'CNIC', 'Name', 'Remarks'],axis = 1)
+
+    df['Date_Time'] = pd.to_datetime(df['Date_Time'], format='%Y-%m-%d %H:%M:%S', errors='coerce')
+
+    df['year'] = df['Date_Time'].dt.year
+    df['month'] = df['Date_Time'].dt.month
+    df['day'] = df['Date_Time'].dt.day
+    df['hour'] = df['Date_Time'].dt.hour
+    df['minute'] = df['Date_Time'].dt.minute
+    df['second'] = df['Date_Time'].dt.second
+    df['weekday'] = df['Date_Time'].dt.weekday
+    df['day_of_year'] = df['Date_Time'].dt.dayofyear
+
+    df = df.drop(['Transaction_Id', 'Date_Time', 'Phone_Number', 'CNIC', 'Name', 'Remarks','IMEI'],axis = 1)
 
     objs = []
     for col in df.columns:
         if df[col].dtype == 'O':
             objs.append(col)
 
-    cont_features = ['Amount', 'Old Balance', 'New Balance','Service Charges']
+    cont_features = ['Amount', 'Old_Balance', 'New_Balance','Service_Charges']
     
     df_normalized = df.copy()
 
@@ -29,40 +35,56 @@ def preprocess(df):
     df_normalized[cont_features] = scaler.fit_transform(df[cont_features])
     
 
-    # label encoding the data 
-    encoders = {}
-    le_data=df_normalized.copy()
+    encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
 
-    for col in objs:
-        le = LabelEncoder()
-        le_data[col] = le.fit_transform(le_data[col])
-        encoders[col] = le 
+    le_data = pd.DataFrame(
+    encoder.fit_transform(df[objs]),
+    columns=objs,
+    index=df.index  # keep original index
+    )
 
-    return le_data, scaler, encoders
+    df_normalized[objs] = le_data
 
-def preprocess_test(df, scaler, label_encoder):
-    df['Date Time'] = pd.to_datetime(df['Date Time'])
-    df['year'] = df['Date Time'].dt.year
-    df['month'] = df['Date Time'].dt.month
-    df['day'] = df['Date Time'].dt.day
-    df['hour'] = df['Date Time'].dt.hour
-    df['minute'] = df['Date Time'].dt.minute
-    df['second'] = df['Date Time'].dt.second
-    df['weekday'] = df['Date Time'].dt.weekday
-    df['day_of_year'] = df['Date Time'].dt.dayofyear
+    # encoders = {}
+    # le_data=df_normalized.copy()
 
-    df = df.drop(['Transaction Id', 'Date Time', 'Phone Number', 'CNIC', 'Name', 'Remarks'], axis=1)
+    # for col in objs:
+    #     le = LabelEncoder()
+    #     le_data[col] = le.fit_transform(le_data[col])
+    #     encoders[col] = le 
+
+    return df_normalized, scaler, encoder
+
+def preprocess_test(df, scaler, encoder):
+
+    df['Date_Time'] = pd.to_datetime(df['Date_Time'], format='%Y-%m-%d %H:%M:%S', errors='coerce')
+    df['year'] = df['Date_Time'].dt.year
+    df['month'] = df['Date_Time'].dt.month
+    df['day'] = df['Date_Time'].dt.day
+    df['hour'] = df['Date_Time'].dt.hour
+    df['minute'] = df['Date_Time'].dt.minute
+    df['second'] = df['Date_Time'].dt.second
+    df['weekday'] = df['Date_Time'].dt.weekday
+    df['day_of_year'] = df['Date_Time'].dt.dayofyear
+
+    df = df.drop(['Transaction_Id', 'Date_Time', 'Phone_Number', 'CNIC', 'Name', 'Remarks','IMEI'],axis = 1)
 
     objs = [col for col in df.columns if df[col].dtype == 'O']
-    cont_features = ['Amount', 'Old Balance', 'New Balance', 'Service Charges']
+    
+    cont_features = ['Amount', 'Old_Balance', 'New_Balance','Service_Charges']
 
-    df_scaled = df.copy()
-    df_scaled[cont_features] = scaler.transform(df_scaled[cont_features])
+    
+    df[cont_features] = scaler.transform(df[cont_features])
 
-    for col in objs:
-        df_scaled[col] = label_encoder[col].fit_transform(df_scaled[col])
+    le_test = pd.DataFrame(
+    encoder.transform(df[objs]),  # Note: use transform, NOT fit_transform
+    columns=objs,
+    index=df.index
+    )
 
-    return df_scaled
+    df[objs] = le_test
+
+    return df
 
 
 
