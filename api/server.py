@@ -1,13 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import joblib
-import numpy as np
 import pandas as pd
 from data_preprocessor import preprocess_test
 
 # Define input data model using Pydantic
 from pydantic import BaseModel, Field
 from typing import Optional
+from rules import apply_business_rules
+import datetime
 
 
 # Initialize FastAPI app
@@ -66,15 +67,26 @@ def predict(transaction: TransactionInput):
     try:
         # Convert input to DataFrame
         input_dict = transaction.dict()
-        df = pd.DataFrame([input_dict])     
+        df = pd.DataFrame([input_dict])
 
+    
         # Preprocess the data
         processed_data = preprocess_test(df,scaler,encoder)
+
+        res = processed_data.copy()
+        res['Date_Time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        results = apply_business_rules(res)  
 
         # Make prediction
         prediction = model.predict(processed_data)
 
-        return {"prediction": prediction.tolist()}
+        return {"prediction Model LGBM": prediction.tolist(), 
+                "New Account Large Amount" : results['flag_new_acc_large_amt'].tolist(),
+                "Risky Time Region" : results['flag_risky_time_region'].tolist(),
+                "High Risk City" : results['flag_high_risk_city'].tolist(),
+                "Rapid Transactions" : results['flag_rapid_txns'].tolist(),
+                  }
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
