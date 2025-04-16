@@ -27,6 +27,7 @@ data/external/
 .venv/
 env/
 venv/
+virtualenv/
 Pipfile.lock
 poetry.lock
 

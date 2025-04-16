@@ -2,21 +2,21 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import joblib
 import pandas as pd
-from data_preprocessor import preprocess_test
+from python_files.data_preprocessor import preprocess_test
 
 # Define input data model using Pydantic
 from pydantic import BaseModel, Field
 from typing import Optional
-from Rules import BusinessRules, StatisticalRules
+from python_files.Rules import BusinessRules, StatisticalRules
 
 
 # Initialize FastAPI app
 app = FastAPI()
 
 # Load model, scaler, and encoder
-model = joblib.load('lgbm_classifier.pkl')
-scaler = joblib.load('lgbm_scaler.pkl')
-encoder = joblib.load('lgbm_encoder.pkl')
+model = joblib.load('models\lgbm_classifier.pkl')
+scaler = joblib.load('models\lgbm_scaler.pkl')
+encoder = joblib.load('models\lgbm_encoder.pkl')
 
 
 # Feature configuration for reference
