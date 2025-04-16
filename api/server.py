@@ -7,8 +7,7 @@ from data_preprocessor import preprocess_test
 # Define input data model using Pydantic
 from pydantic import BaseModel, Field
 from typing import Optional
-from rules import apply_business_rules
-import datetime
+from Rules import BusinessRules, StatisticalRules
 
 
 # Initialize FastAPI app
@@ -19,20 +18,23 @@ model = joblib.load('lgbm_classifier.pkl')
 scaler = joblib.load('lgbm_scaler.pkl')
 encoder = joblib.load('lgbm_encoder.pkl')
 
-# Feature configuration (optional for your reference)
-features = {
-    'continous': ['Amount', 'Old_Balance', 'New_Balance', 'Service_Charges'],
-    'drop': ['Transaction_Id', 'Date_Time', 'Phone_Number', 'CNIC', 'Name', 'Remarks'],
-    'categorical': [
-        'Type', 'ID_Source', 'Source_State', 'Source_City',
-        'Device_Name', 'IMEI', 'KYC_Status', 'Channel',
-        'ID_Dest', 'Dest_State', 'Dest_City'
-    ]
-}
+
+# Feature configuration for reference
+
+# features = {
+#     'continous': ['Amount', 'Old_Balance', 'New_Balance', 'Service_Charges'],
+#     'drop': ['Transaction_Id', 'Date_Time', 'Phone_Number', 'CNIC', 'Name', 'Remarks'],
+#     'categorical': [
+#         'Type', 'ID_Source', 'Source_State', 'Source_City',
+#         'Device_Name', 'IMEI', 'KYC_Status', 'Channel',
+#         'ID_Dest', 'Dest_State', 'Dest_City'
+#     ]
+# }
 
 class TransactionInput(BaseModel):
     Transaction_Id: Optional[str] = Field(alias="Transaction_Id")
     Date_Time: Optional[str] = Field(alias="Date_Time")
+    Account_Creation_Date: Optional[str] = Field(alias="Account_Creation_Date")
     Phone_Number: Optional[str] = Field(alias="Phone_Number")
     CNIC: Optional[str]
     Name: Optional[str]
@@ -63,30 +65,28 @@ def read_root():
     return {"message": "LightGBM ML API with preprocessing is running!"}
 
 @app.post("/predict")
-def predict(transaction: TransactionInput):
+def predict(transaction: dict):
     try:
         # Convert input to DataFrame
-        input_dict = transaction.dict()
-        df = pd.DataFrame([input_dict])
+        df = pd.DataFrame([transaction])
 
-    
         # Preprocess the data
         processed_data = preprocess_test(df,scaler,encoder)
 
-        res = processed_data.copy()
-        res['Date_Time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        transaction_id = df['Transaction_Id'][0]
 
-        results = apply_business_rules(res)  
+        business = BusinessRules(df)
+        statistical = StatisticalRules(df)
 
-        # Make prediction
+        business_results = business.apply_rules(transaction_id)
+
+        statistical_results = statistical.apply_rules(transaction_id)
+
         prediction = model.predict(processed_data)
 
-        return {"prediction Model LGBM": prediction.tolist(), 
-                "New Account Large Amount" : results['flag_new_acc_large_amt'].tolist(),
-                "Risky Time Region" : results['flag_risky_time_region'].tolist(),
-                "High Risk City" : results['flag_high_risk_city'].tolist(),
-                "Rapid Transactions" : results['flag_rapid_txns'].tolist(),
-                  }
+        return {"prediction Model LGBM": prediction.tolist(),
+                "Prediction Business Rules" : business_results,
+                "Prediction Statiscal Rules" : statistical_results} 
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
