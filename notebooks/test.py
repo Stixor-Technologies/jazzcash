@@ -42,6 +42,11 @@ while True:
     try:
         business_weight = float(input("Enter weightage for Business Rules (0-100): "))
         statistical_weight = float(input("Enter weightage for Statistical Rules (0-100): "))
+        if business_weight < 0 or business_weight > 100 or statistical_weight < 0 or statistical_weight > 100:
+             print("❌ Error: Weights must be between 0 and 100.")
+             print("Please enter valid weightages again.\n")
+             continue
+
         total = business_weight + statistical_weight
         
         if total > 100:
