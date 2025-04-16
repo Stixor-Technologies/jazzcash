@@ -37,24 +37,69 @@ transaction_id = '262874940'
 print("Transaction Data:")
 print(df)
 
+# Get weightages from user and ensure they do not exceed 100
+while True:
+    try:
+        business_weight = float(input("Enter weightage for Business Rules (0-100): "))
+        statistical_weight = float(input("Enter weightage for Statistical Rules (0-100): "))
+        total = business_weight + statistical_weight
+        
+        if total > 100:
+            print("❌ Error: The combined weight of Business and Statistical Rules exceeds 100.")
+            print("Please enter valid weightages again.\n")
+        else:
+            model_weight = 100 - total
+            break
+    except ValueError:
+        print("❌ Invalid input. Please enter numeric values only.\n")
+
+# Show final weights
+print(f"\n✅ Weight Distribution:")
+print(f"Business Rules Weightage: {business_weight}%")
+print(f"Statistical Rules Weightage: {statistical_weight}%")
+print(f"Model (Auto-assigned) Weightage: {model_weight}%")
+
 # Business Rules check
 business = BusinessRules(df)
 business_results, business_score = business.apply_rules(transaction_id)
+business_percentage = (business_score / 100) * 100
+
 print("\nBusiness Rules Results:")
-print("\nbusiness_results:",business_results)
-print("\nbusiness_score:",business_score)
 for rule, result in business_results.items():
     print(f"{rule}: {'Flagged' if result else 'Not Flagged'}")
 print(f"Business Rules Score: {business_score}/100")
-print(f"Business Rules Score Percentage: {(business_score/100)*100}")
+print(f"Business Rules Score Percentage: {business_percentage:.2f}%")
 
 # Statistical Rules check
 statistical = StatisticalRules(df)
 statistical_results, statistical_score = statistical.apply_rules(transaction_id)
+statistical_percentage = (statistical_score / 100) * 100
+
 print("\nStatistical Rules Results:")
-print("\nstatistical_results:",statistical_results)
-print("\nstatistical_score:",statistical_score)
 for rule, result in statistical_results.items():
     print(f"{rule}: {'Flagged' if result else 'Not Flagged'}")
 print(f"Statistical Rules Score: {statistical_score}/100")
-print(f"Statistical Rules Score Percentage: {(statistical_score/100)*100}")
+print(f"Statistical Rules Score Percentage: {statistical_percentage:.2f}%")
+
+# Model score (hardcoded)
+model_score = 98
+model_percentage = model_score
+
+print(f"\nModel Score: {model_score}/100")
+
+# Final weighted score calculation
+final_score = (
+    (business_percentage * business_weight / 100) +
+    (statistical_percentage * statistical_weight / 100) +
+    (model_percentage * model_weight / 100)
+)
+
+print(f"\n🧮 Final Weighted Risk Score: {final_score:.2f}/100")
+
+# Risk classification
+if final_score >= 75:
+    print("⚠️ High Risk Transaction")
+elif final_score >= 50:
+    print("⚠️ Medium Risk Transaction")
+else:
+    print("✅ Low Risk Transaction")
