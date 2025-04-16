@@ -22,6 +22,9 @@ data/external/
 *.xlsx
 *.zip
 
+# models.pkl
+*.pkl
+
 # Environments
 .env
 .venv/
