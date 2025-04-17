@@ -1,7 +1,6 @@
 
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import IsolationForest
 
 class BusinessRules:
     def __init__(self, df):
@@ -44,14 +43,18 @@ class BusinessRules:
         }
 
         results = {}
+        score = 0
+        weight_per_rule = 25
+
         for rule_name, flagged in rules.items():
-            results[rule_name] = transaction_id in flagged if transaction_id else False
-        return results
+            is_flagged = transaction_id in flagged if transaction_id else False
+            results[rule_name] = is_flagged
+            if is_flagged:
+                score += weight_per_rule
+
+        return results, score
 
 
-# -------------------------------
-# Statistical Rules Class
-# -------------------------------
 class StatisticalRules:
     def __init__(self, df):
         self.df = df.copy()
@@ -80,14 +83,20 @@ class StatisticalRules:
     def apply_rules(self, transaction_id=None):
         rules = {
             "StatisticalRule5_rule5_large_transaction": self.rule5_large_transaction(),
-            "StatisticalRule6_ule6_high_frequency_same_source": self.rule6_high_frequency_same_source(),
+            "StatisticalRule6_rule6_high_frequency_same_source": self.rule6_high_frequency_same_source(),
             "StatisticalRule7_rule7_unusual_dest_accounts": self.rule7_unusual_dest_accounts(),
             "StatisticalRule8_rule8_time_based_spike": self.rule8_time_based_spike()
         }
 
         results = {}
-        for rule_name, flagged in rules.items():
-            results[rule_name] = transaction_id in flagged if transaction_id else False
+        score = 0
+        weight_per_rule = 25
 
-        return results  # <- ✅ THIS LINE WAS MISSING
+        for rule_name, flagged in rules.items():
+            is_flagged = transaction_id in flagged if transaction_id else False
+            results[rule_name] = is_flagged
+            if is_flagged:
+                score += weight_per_rule
+
+        return results, score
 

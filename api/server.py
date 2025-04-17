@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import joblib
 import pandas as pd
 from python_files.data_preprocessor import preprocess_test
+import numpy as np
 
 # Define input data model using Pydantic
 from pydantic import BaseModel, Field
@@ -64,9 +65,28 @@ class TransactionInput(BaseModel):
 def read_root():
     return {"message": "LightGBM ML API with preprocessing is running!"}
 
+@app.get("/weights")
+def get_weights():
+    try:
+        # Return the default weights
+        weights = {
+            "business_weight": 20,
+            "statistical_weight": 30,
+            "model_weight": 50
+        }
+        return weights
+    
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.post("/predict")
 def predict(transaction: dict):
     try:
+
+        business_weight = transaction.pop('business_weight')  # Default to 20 if not provided
+        statistical_weight = transaction.pop('statistical_weight')  # Default to 30 if not provided
+        model_weight = transaction.pop('model_weight')
+
         # Convert input to DataFrame
         df = pd.DataFrame([transaction])
 
@@ -78,15 +98,44 @@ def predict(transaction: dict):
         business = BusinessRules(df)
         statistical = StatisticalRules(df)
 
-        business_results = business.apply_rules(transaction_id)
+        business_results, business_score = business.apply_rules(transaction_id)
+        business_percentage = business_score * business_weight / 100
+        
 
-        statistical_results = statistical.apply_rules(transaction_id)
+        statistical_results, statistical_score = statistical.apply_rules(transaction_id)
+        statistical_percentage = statistical_score * statistical_weight / 100
+        
 
-        prediction = model.predict(processed_data)
+        prob_model = model.predict_proba(processed_data)
 
-        return {"prediction Model LGBM": prediction.tolist(),
+        # Convert probabilities to binary class labels based on the threshold
+        prediction_model = model.predict(processed_data)
+
+        if prediction_model == 1:
+            model_percentage = np.round(float(np.max(prob_model)) * 100, 2)
+        else:
+            model_percentage = np.round(100 - (float(np.max(prob_model)) * 100), 2)
+
+        final_score = (
+        (business_percentage) +
+        (statistical_percentage) +
+        (model_percentage * model_weight / 100)
+        )
+
+        threshold = 50
+
+        if final_score > threshold:
+            prediction = 1
+        else:
+            prediction = 0
+
+        return {"Accumulative Prediction" : final_score,
+                "Prediction Model LGBM": prediction,
+                "Probability Model" : model_percentage.tolist(),
                 "Prediction Business Rules" : business_results,
-                "Prediction Statiscal Rules" : statistical_results} 
+                "Probability Business Rules" : business_percentage,
+                "Prediction Statiscal Rules" : statistical_results,
+                "Probability Statistical Rules" : statistical_percentage} 
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
