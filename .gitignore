@@ -22,11 +22,15 @@ data/external/
 *.xlsx
 *.zip
 
+# models.pkl
+*.pkl
+
 # Environments
 .env
 .venv/
 env/
 venv/
+virtualenv/
 Pipfile.lock
 poetry.lock
 
