@@ -51,11 +51,6 @@ def preprocess(df):
 
     df = df.drop(['Transaction_Id', 'Date_Time', 'Phone_Number', 'CNIC', 'Name', 'Remarks','IMEI','Account_Creation_Date'],axis = 1)
 
-    objs = []
-    for col in df.columns:
-        if df[col].dtype == 'O':
-            objs.append(col)
-
     cont_features = ['Amount', 'Old_Balance', 'New_Balance','Service_Charges']
     
     df_normalized = df.copy()
@@ -84,7 +79,12 @@ def preprocess(df):
     index=df.index  # keep original index
     )
 
-    df_normalized[objs] = le_data
+#    df_normalized[objs] = le_data
+
+    encoder_dict = {
+        col: {cat: i for i, cat in enumerate(cats)}
+        for col, cats in zip(objs, encoder.categories_)
+    }
 
     # encoders = {}
     # le_data=df_normalized.copy()
@@ -94,9 +94,9 @@ def preprocess(df):
     #     le_data[col] = le.fit_transform(le_data[col])
     #     encoders[col] = le 
 
-    return df_normalized, scaler, encoder
+    return df_normalized, scaler, encoder_dict
 
-def preprocess_test(df, scaler, encoder):
+def preprocess_test(df, scaler, encoder_dict):
     
     """
     Preprocesses a test DataFrame using a pre-fitted scaler and encoder.
@@ -118,7 +118,6 @@ def preprocess_test(df, scaler, encoder):
         pd.DataFrame: Preprocessed test DataFrame with extracted datetime features, 
                       scaled numerical features, and encoded categorical features.
     """
-
 
     df['Date_Time'] = pd.to_datetime(df['Date_Time'], format='%Y-%m-%d %H:%M:%S', errors='coerce')
 
@@ -158,15 +157,24 @@ def preprocess_test(df, scaler, encoder):
                 
     cont_features = ['Amount', 'Old_Balance', 'New_Balance','Service_Charges']
 
-    
+
     df[cont_features] = scaler.transform(df[cont_features])
 
-    le_test = pd.DataFrame(
-    encoder.transform(df[objs]),  # Note: use transform, NOT fit_transform
-    columns=objs,
-    index=df.index
-    )
+    for col in objs:
+        df[col] = df[col].apply(lambda x: encoder_dict[col].get(x, -1))
 
-    df[objs] = le_test
+    # for col in objs:
+    #     val = dat.at[dat.index[0], col]
+    #     dat.loc[dat.index[0], col] = encoder_dict[col].get(val, -1) # default value is -1
+
+
+
+    # le_test = pd.DataFrame(
+    # encoder.transform(df[objs]),  # Note: use transform, NOT fit_transform
+    # columns=objs,
+    # index=df.index
+    # )
+
+    # df[objs] = le_test
 
     return df

@@ -16,7 +16,6 @@ else:
     weights = {"business_weight": 20, "statistical_weight": 30, "model_weight": 50}
 
 # Input fields for the transaction data
-
 # test_case_1 = {
 #     "Transaction_Id": st.text_input("Transaction ID", "262874940"),
 #     "Account_Creation_Date": st.text_input("Date Account_Creation_Date", "2025-11-20 03:51:50"),
@@ -24,73 +23,132 @@ else:
 #     "Phone_Number": st.text_input("Phone Number", "+92 333 2569874"),
 #     "CNIC": st.text_input("CNIC", "40734-8820668-3"),
 #     "Name": st.text_input("Name", "Fariha Mirza"),
-#     "Type": st.selectbox("Type", ["Utility Bill Payment", "PAYMENT", "TRANSFER", "WITHDRAWAL"]),
-#     "Amount": st.number_input("Amount", value=1740100.97),
+#     "Type": st.selectbox("Type", ["Biometric Cash Withdrawal", "PAYMENT", "TRANSFER", "WITHDRAWAL", "Utility Bill Payment"], index=4),
+#     "Amount": st.number_input("Amount", value=998665.2),
 #     "ID_Source": st.text_input("ID Source", "C12345896"),
-#     "Old_Balance": st.number_input("Old Balance", value=9987000.00),
-#     "New_Balance": st.number_input("New Balance", value=0.00),
-#     "Source_State": st.text_input("Source State", "Unknown"),
-#     "Source_City": st.text_input("Source City", "Unknown"),
+#     "Old_Balance": st.number_input("Old Balance", value=998700.00),
+#     "New_Balance": st.number_input("New Balance", value=0.0),
 #     "Device_Name": st.text_input("Device Name", "Xiaomi Mi 11"),
 #     "IMEI": st.text_input("IMEI", "601635731712294"),
-#     "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified"]),
+#     "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified"], index=1),
 #     "Service_Charges": st.number_input("Service Charges", value=34.80),
 #     "Channel": st.text_input("Channel", "Mobile Payments"),
 #     "Remarks": st.text_input("Remarks", "Utility bill payment"),
 #     "ID_Dest": st.text_input("ID Dest", "M1855643329"),
 #     "Dest_State": st.text_input("Dest State", "Balochistan"),
 #     "Dest_City": st.text_input("Dest City", "Dera Bugti"),
-# }
+#     "Source_State": st.text_input("Source State", "Punjab"),
+#     "Source_City": st.text_input("Source City", "Islamabad"),
+# } # fradulent case
 
-# test_case_2 = {
+
+test_case_2 = {
+    "Transaction_Id": st.text_input("Transaction ID", "263099341"),
+    "Account_Creation_Date": st.text_input("Date Account_Creation_Date", "2025-09-08"),
+    "Date_Time": st.text_input("Date Time", "2025-10-10 14:18:44"),
+    "Phone_Number": st.text_input("Phone Number", "+92 333 6895145"),
+    "CNIC": st.text_input("CNIC", "42101-2290987-9"),
+    "Name": st.text_input("Name", "Salman Khalid"),
+    "Type": st.selectbox("Type", ["Biometric Cash Withdrawal", "PAYMENT", "TRANSFER", "WITHDRAWAL", "Utility Bill Payment", "Wallet-to-Wallet Transfer"], index=5),
+    "Amount": st.number_input("Amount", value=1490000.00),
+    "ID_Source": st.text_input("ID Source", "C1789461102"),
+    "Old_Balance": st.number_input("Old Balance", value=2500000.00),
+    "New_Balance": st.number_input("New Balance", value=1010950.0),
+    "Device_Name": st.text_input("Device Name", "Infinix Zero X Neo"),
+    "IMEI": st.text_input("IMEI", "351760319091001"),
+    "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified"], index=0),
+    "Service_Charges": st.number_input("Service Charges", value=50.00),
+    "Channel": st.text_input("Channel", "Mobile App"),
+    "Remarks": st.text_input("Remarks", "Wallet Transfer"),
+    "ID_Dest": st.text_input("ID Dest", "M1187643899"),
+    "Dest_State": st.text_input("Dest State", "Punjab"),
+    "Dest_City": st.text_input("Dest City", "DG Khan"),
+    "Source_State": st.text_input("Source State", "Punjab"),
+    "Source_City": st.text_input("Source City", "Rawalpindi")
+} 
+# # non fraudulent
+
+# test_case_2_night = {
 #     "Transaction_Id": st.text_input("Transaction ID", "263099341"),
-#     "Account_Creation_Date": st.text_input("Date Account_Creation_Date", "2025-10-08"),
-#     "Date_Time": st.text_input("Date Time", "2025-10-10 14:18:44"),
-#     "Phone_Number": st.text_input("Phone Number", "Not Provided"),
+#     "Account_Creation_Date": st.text_input("Date Account_Creation_Date", "2025-09-08"),
+#     "Date_Time": st.text_input("Date Time", "2025-10-10 03:18:44"),
+#     "Phone_Number": st.text_input("Phone Number", "+92 333 6895145"),
 #     "CNIC": st.text_input("CNIC", "42101-2290987-9"),
 #     "Name": st.text_input("Name", "Salman Khalid"),
-#     "Type": st.selectbox("Type", ["Wallet-to-Wallet Transfer", "PAYMENT", "TRANSFER", "WITHDRAWAL"]),
-#     "Amount": st.number_input("Amount", value=2490000.00),
+#     "Type": st.selectbox("Type", ["Biometric Cash Withdrawal", "PAYMENT", "TRANSFER", "WITHDRAWAL", "Utility Bill Payment", "Wallet-to-Wallet Transfer"], index=5),
+#     "Amount": st.number_input("Amount", value=1490000.00),
 #     "ID_Source": st.text_input("ID Source", "C1789461102"),
 #     "Old_Balance": st.number_input("Old Balance", value=2500000.00),
-#     "New_Balance": st.number_input("New Balance", value=0.00),
+#     "New_Balance": st.number_input("New Balance", value=1010950.0),
 #     "Device_Name": st.text_input("Device Name", "Infinix Zero X Neo"),
 #     "IMEI": st.text_input("IMEI", "351760319091001"),
-#     "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified", "Pending"]),
+#     "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified"], index=0),
 #     "Service_Charges": st.number_input("Service Charges", value=50.00),
 #     "Channel": st.text_input("Channel", "Mobile App"),
 #     "Remarks": st.text_input("Remarks", "Wallet Transfer"),
 #     "ID_Dest": st.text_input("ID Dest", "M1187643899"),
-#     "Dest_State": st.text_input("Dest State", "Sindh"),
-#     "Dest_City": st.text_input("Dest City", "Lyari Town"),
+#     "Dest_State": st.text_input("Dest State", "Punjab"),
+#     "Dest_City": st.text_input("Dest City", "DG Khan"),
 #     "Source_State": st.text_input("Source State", "Punjab"),
-#     "Source_City": st.text_input("Source City", "Rawalpindi"),
-# }
+#     "Source_City": st.text_input("Source City", "Rawalpindi")
+# } # non fruadulent
 
-test_case_3 = {
-    "Transaction_Id": st.text_input("Transaction ID", "263741220"),
-    "Account_Creation_Date": st.text_input("Date Account_Creation_Date", "2025-09-10"),
-    "Date_Time": st.text_input("Date Time", "2025-09-16 12:33:22"),
-    "Phone_Number": st.text_input("Phone Number", "+92 301-4539011"),
-    "CNIC": st.text_input("CNIC", "35201-4938273-5"),
-    "Name": st.text_input("Name", "Hina Arshad"),
-    "Type": st.selectbox("Type", ["Biometric Cash Withdrawal", "PAYMENT", "TRANSFER", "WITHDRAWAL"]),
-    "Amount": st.number_input("Amount", value=970000.00),
-    "ID_Source": st.text_input("ID Source", "C1778241900"),
-    "Old_Balance": st.number_input("Old Balance", value=1000000.00),
-    "New_Balance": st.number_input("New Balance", value=30000.00),
-    "Device_Name": st.text_input("Device Name", "Biometric POS Terminal #44"),
-    "IMEI": st.text_input("IMEI", "867530921110212"),
-    "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified"]),
-    "Service_Charges": st.number_input("Service Charges", value=15.00),
-    "Channel": st.text_input("Channel", "POS Biometric"),
-    "Remarks": st.text_input("Remarks", "Cash withdrawal via thumb"),
-    "ID_Dest": st.text_input("ID Dest", "Not Applicable"),
-    "Dest_State": st.text_input("Dest State", "Punjab"),
-    "Dest_City": st.text_input("Dest City", "Gujranwala"),
-    "Source_State": st.text_input("Source State", "Punjab"),
-    "Source_City": st.text_input("Source City", "Gujranwala"),
-}
+
+# test_case_3 = {
+#     "Transaction_Id": st.text_input("Transaction ID", "263741220"),
+#     "Account_Creation_Date": st.text_input("Date Account_Creation_Date", "2024-09-10"),
+#     "Date_Time": st.text_input("Date Time", "2025-09-16 13:18:00"),
+#     "Phone_Number": st.text_input("Phone Number", "+92 301-4539011"),
+#     "CNIC": st.text_input("CNIC", "35201-4938273-5"),
+#     "Name": st.text_input("Name", "Hina Arshad"),
+#     "Type": st.selectbox("Type", [
+#         "Biometric Cash Withdrawal", "PAYMENT", "TRANSFER", "WITHDRAWAL", 
+#         "Utility Bill Payment", "Wallet-to-Wallet Transfer", "Bank Transfer"
+#     ], index=6),
+#     "Amount": st.number_input("Amount", value=970000.00),
+#     "ID_Source": st.text_input("ID Source", "C1778241900"),
+#     "Old_Balance": st.number_input("Old Balance", value=970000.00),
+#     "New_Balance": st.number_input("New Balance", value=0.0),
+#     "Device_Name": st.text_input("Device Name", "Huawei P30"),
+#     "IMEI": st.text_input("IMEI", "867530921110212"),
+#     "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified"], index=0),
+#     "Service_Charges": st.number_input("Service Charges", value=0.0),
+#     "Channel": st.text_input("Channel", "Mobile Payment"),
+#     "Remarks": st.text_input("Remarks", "Cash TRansfer"),
+#     "ID_Dest": st.text_input("ID Dest", "M15468933"),
+#     "Dest_State": st.text_input("Dest State", "Punjab"),
+#     "Dest_City": st.text_input("Dest City", "Gujranwala"),
+#     "Source_State": st.text_input("Source State", "Balochistan"),
+#     "Source_City": st.text_input("Source City", "Dera Bughti")
+# } # fraud case
+
+# test_case_3_a = {
+#     "Transaction_Id": st.text_input("Transaction ID", "263741220"),
+#     "Account_Creation_Date": st.text_input("Date Account_Creation_Date", "2024-09-10"),
+#     "Date_Time": st.text_input("Date Time", "2025-09-16 03:33:22"),
+#     "Phone_Number": st.text_input("Phone Number", "+92 301-4539011"),
+#     "CNIC": st.text_input("CNIC", "35201-4938273-5"),
+#     "Name": st.text_input("Name", "Hina Arshad"),
+#     "Type": st.selectbox("Type", [
+#         "Biometric Cash Withdrawal", "PAYMENT", "TRANSFER", "WITHDRAWAL", 
+#         "Utility Bill Payment", "Wallet-to-Wallet Transfer", "Bank Transfer"
+#     ], index=0),
+#     "Amount": st.number_input("Amount", value=90000.00),
+#     "ID_Source": st.text_input("ID Source", "C1778241900"),
+#     "Old_Balance": st.number_input("Old Balance", value=90000.00),
+#     "New_Balance": st.number_input("New Balance", value=0.0),
+#     "Device_Name": st.text_input("Device Name", "Huawei P30"),
+#     "IMEI": st.text_input("IMEI", "867530921110212"),
+#     "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified"], index=0),
+#     "Service_Charges": st.number_input("Service Charges", value=0.0),
+#     "Channel": st.text_input("Channel", "POS Biometric"),
+#     "Remarks": st.text_input("Remarks", "Cash withdrawal via thumb"),
+#     "ID_Dest": st.text_input("ID Dest", "M15468933"),
+#     "Dest_State": st.text_input("Dest State", "Punjab"),
+#     "Dest_City": st.text_input("Dest City", "DG Khan"),
+#     "Source_State": st.text_input("Source State", "Punjab"),
+#     "Source_City": st.text_input("Source City", "DG Khan")
+# } # non fraudulent
 
 # test_case_4 = {
 #     "Transaction_Id": st.text_input("Transaction ID", "264411783"),
@@ -99,14 +157,17 @@ test_case_3 = {
 #     "Phone_Number": st.text_input("Phone Number", "+92 334-2239841"),
 #     "CNIC": st.text_input("CNIC", "61101-1982719-6"),
 #     "Name": st.text_input("Name", "Saima Qureshi"),
-#     "Type": st.selectbox("Type", ["Wallet-to-Bank Transfer", "PAYMENT", "TRANSFER", "WITHDRAWAL"]),
+#     "Type": st.selectbox("Type", [
+#         "Wallet-to-Bank Transfer", "Biometric Cash Withdrawal", "PAYMENT", "TRANSFER", 
+#         "WITHDRAWAL", "Utility Bill Payment", "Wallet-to-Wallet Transfer", "Bank Transfer"
+#     ], index=0),
 #     "Amount": st.number_input("Amount", value=78500.00),
 #     "ID_Source": st.text_input("ID Source", "C1571002221"),
 #     "Old_Balance": st.number_input("Old Balance", value=156000.00),
 #     "New_Balance": st.number_input("New Balance", value=77450.00),
 #     "Device_Name": st.text_input("Device Name", "Vivo Y21"),
 #     "IMEI": st.text_input("IMEI", "353362791102234"),
-#     "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified"]),
+#     "KYC_Status": st.selectbox("KYC Status", ["Verified", "On-Hold", "Not Verified"], index=0),
 #     "Service_Charges": st.number_input("Service Charges", value=50.00),
 #     "Channel": st.text_input("Channel", "Mobile App"),
 #     "Remarks": st.text_input("Remarks", "Monthly savings transfer"),
@@ -114,10 +175,15 @@ test_case_3 = {
 #     "Dest_State": st.text_input("Dest State", "Punjab"),
 #     "Dest_City": st.text_input("Dest City", "Lahore"),
 #     "Source_State": st.text_input("Source State", "Punjab"),
-#     "Source_City": st.text_input("Source City", "Islamabad"),
-# }
+#     "Source_City": st.text_input("Source City", "Islamabad")
+# } # non fradualent
 
-transaction_data = test_case_3
+#transaction_data = test_case_1
+transaction_data = test_case_2
+# transaction_data = test_case_3
+# transaction_data = test_case_3_a
+# transaction_data = test_case_4
+
 
 # Sliders to adjust the weights
 business_weight = st.slider("Business Weight", min_value=0, max_value=100, value=weights["business_weight"], step=1)

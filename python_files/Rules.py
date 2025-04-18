@@ -16,11 +16,11 @@ class BusinessRules:
                 flagged.append(row['Transaction_Id'])
         return flagged
 
-    def rule2_high_risk_cities(self, high_risk=['Sindh', 'Balochistan']):
+    def rule2_high_risk_cities(self, high_risk=['Punjab', 'Balochistan']):
         flagged = self.df[self.df['Dest_State'].isin(high_risk)]
         return flagged['Transaction_Id'].tolist()
 
-    def rule3_high_risk_region_and_time(self, region='Balochistan', start_time='03:00:00', end_time='04:00:00'):
+    def rule3_high_risk_region_and_time(self, region='Punjab', start_time='03:00:00', end_time='04:00:00'):
         flagged = []
         for _, row in self.df.iterrows():
             t = row['Date_Time'].strftime('%H:%M:%S')

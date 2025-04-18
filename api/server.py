@@ -18,6 +18,7 @@ app = FastAPI()
 model = joblib.load('models\lgbm_classifier.pkl')
 scaler = joblib.load('models\lgbm_scaler.pkl')
 encoder = joblib.load('models\lgbm_encoder.pkl')
+encoder_dict = joblib.load("models\encoder_dict.pkl")
 
 
 # Feature configuration for reference
@@ -91,7 +92,7 @@ def predict(transaction: dict):
         df = pd.DataFrame([transaction])
 
         # Preprocess the data
-        processed_data = preprocess_test(df,scaler,encoder)
+        processed_data = preprocess_test(df,scaler,encoder_dict)
 
         transaction_id = df['Transaction_Id'][0]
 
@@ -129,7 +130,7 @@ def predict(transaction: dict):
         else:
             prediction = 0
 
-        return {"Accumulative Prediction" : final_score,
+        return {"Accumulative Prediction" : np.round(final_score,2),
                 "Prediction Model LGBM": prediction,
                 "Probability Model" : model_percentage.tolist(),
                 "Prediction Business Rules" : business_results,
@@ -139,3 +140,21 @@ def predict(transaction: dict):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/explain-prediction")
+def explain_prediction():
+    try:
+        # Instantiate dummy DataFrame for rule fetching
+        dummy_df = pd.DataFrame([{}])
+        business = BusinessRules(dummy_df)
+        statistical = StatisticalRules(dummy_df)
+
+        business_rule_list = business.list_rules()
+        statistical_rule_list = statistical.list_rules()
+
+        return {
+            "Business Rules": business_rule_list,
+            "Statistical Rules": statistical_rule_list
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
